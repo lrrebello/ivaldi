@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0">Bem-vindo, {{ current_user.name.split(' ')[0] or 'Usuário' }}!</h2>
+                </div>
+                <div class="card-body">
+                    <p><strong>Seu Progresso:</strong></p>
+                    <ul>
+                        <li>Pontos: {{ progress.points }}</li>
+                        <li>Nível: {{ progress.level }}</li>
+                    </ul>
+                    <!-- Barra de progresso -->
+                    <div class="progress">
+                        <div class="progress-bar bg-success" role="progressbar" 
+                             style="width: {{ progress_percentage }}%" 
+                             aria-valuenow="{{ progress_percentage }}" 
+                             aria-valuemin="0" 
+                             aria-valuemax="100">
+                            {{ progress_percentage }}%
+                        </div>
+                    </div>
+                    <h3 class="mt-4">Módulos Disponíveis</h3>
+                    {% if has_payment %}
+                        {% if modules %}
+                            <div class="row">
+                                {% for module in modules %}
+                                    <div class="col-md-6 mb-4">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h5 class="mb-0">Módulo {{ module.module_number }}</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <p class="hebrew-text">{{ module.hebrew_text }}</p>
+                                                <a href="{{ url_for('lessons.module_view', module_id=module.id) }}" class="btn btn-primary">Acessar Módulo</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <p>Nenhum módulo disponível no momento.</p>
+                        {% endif %}
+                    {% else %}
+                        <p>Você precisa realizar o pagamento para acessar os módulos.</p>
+                        <a href="{{ url_for('payments.payment') }}" class="btn btn-warning">Realizar Pagamento</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="text-center mt-5">
+        <p><strong>HEBRAICOFÁCIL</strong><br>Aprenda hebraico de forma fácil e prática.</p>
+        <div>
+            <strong>LINKS</strong><br>
+            <a href="{{ url_for('index') }}">Início</a> |
+            {% if current_user.is_authenticated %}
+            <a href="{{ url_for('auth.account') }}">Minha Conta</a> |
+            <a href="{{ url_for('auth.logout') }}">Sair</a>
+            {% else %}
+            <a href="{{ url_for('auth.login') }}">Entrar</a> |
+            <a href="{{ url_for('auth.register') }}">Registrar</a>
+            {% endif %}
+        </div>
+    </footer>
+</div>
+{% endblock %}

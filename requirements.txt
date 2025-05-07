@@ -1,0 +1,13 @@
+flask==2.3.3
+flask-sqlalchemy==3.0.5
+flask-login==0.6.3
+flask-mail==0.9.1
+flask-session==0.5.0
+werkzeug==3.0.1
+itsdangerous==2.1.2
+python-dotenv==1.0.0
+pagarme-python==5.9.0
+gunicorn==22.0.0
+psycopg2-binary==2.9.9
+Flask-Caching==2.1.0
+requests==2.31.0

@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}HebraicoFacil - Aprenda Hebraico Online{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+        <h1>Bem-vindo ao HebraicoFacil</h1>
+        <p class="lead">Aprenda hebraico de forma fácil e prática, com lições interativas e exercícios.</p>
+        <p>O HebraicoFacil é uma plataforma online para aprendizado do alfabeto hebraico, com foco em uma metodologia prática e eficiente.</p>
+        
+        <div class="mt-4">
+            {% if current_user.is_authenticated %}
+                <a href="{{ url_for('lessons.dashboard') }}" class="btn btn-primary btn-lg">Ir para o Painel</a>
+            {% else %}
+                <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg">Começar Agora</a>
+                <a href="{{ url_for('auth.login') }}" class="btn btn-primary btn-lg ms-2">Entrar</a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h3 class="card-title mb-0">{{ plan.name }}</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-text">{{ plan.description }}</p>
+                <ul class="list-group list-group-flush mb-3">
+                    <li class="list-group-item"><strong>Duração:</strong> {{ plan.duration }}</li>
+                    <li class="list-group-item"><strong>Preço:</strong> {{ plan.price }}</li>
+                </ul>
+                {% if not current_user.is_authenticated %}
+                    <a href="{{ url_for('auth.register') }}" class="btn btn-success w-100">Assinar Agora</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <h3>Aprenda o Alfabeto</h3>
+                <p>Conheça as consoantes e vogais do alfabeto hebraico com exemplos.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <h3>Exercícios Práticos</h3>
+                <p>Pratique com exercícios interativos e teste seus conhecimentos.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <h3>Acompanhe seu Progresso</h3>
+                <p>Veja seu progresso e ganhe pontos à medida que avança nas lições.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

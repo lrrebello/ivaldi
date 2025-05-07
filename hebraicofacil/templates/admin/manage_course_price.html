@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Gerenciar Preço do Curso - HebraicoFacil{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12 mb-4">
+        <h1>Gerenciar Preço do Curso</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="card-title mb-0">Configurar Preço do Curso</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('admin.manage_course_price') }}">
+                    <div class="mb-3">
+                        <label for="price" class="form-label">Preço do Curso (R$)</label>
+                        <input type="number" step="0.01" min="0" class="form-control" id="price" name="price" 
+                               value="{{ course_price.price }}" required>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Salvar Preço</button>
+                        <a href="{{ url_for('admin.admin_dashboard') }}" class="btn btn-secondary">Voltar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

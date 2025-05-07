@@ -1,0 +1,352 @@
+/* Estilos gerais para a aplicação HebraicoFácil */
+
+/* Definir variáveis CSS para os temas */
+:root {
+    /* Modo Claro (padrão) */
+    --background-color: #ffffff;
+    --text-color: #333333;
+    --card-background: #ffffff;
+    --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --navbar-bg: #007bff;
+    --navbar-text: #ffffff;
+    --footer-bg: #f8f9fa;
+    --footer-text: #333333;
+    --link-color: #007bff;
+    --link-hover-color: #0056b3;
+    --button-bg: #007bff;
+    --button-text: #ffffff;
+    --progress-bar-bg: #28a745;
+    --list-group-bg: #ffffff;
+    --list-group-text: #333333;
+}
+
+/* Modo Escuro */
+body.dark-mode {
+    --background-color: #1a1a1a;
+    --text-color: #e0e0e0;
+    --card-background: #2c2c2c;
+    --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    --navbar-bg: #003087;
+    --navbar-text: #e0e0e0;
+    --footer-bg: #2c2c2c;
+    --footer-text: #e0e0e0;
+    --link-color: #66b0ff;
+    --link-hover-color: #99cfff;
+    --button-bg: #0056b3;
+    --button-text: #e0e0e0;
+    --progress-bar-bg: #1f7a38;
+    --list-group-bg: #333333;
+    --list-group-text: #e0e0e0;
+}
+
+/* Aplicar as variáveis */
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+/* Estilos para texto hebraico */
+.hebrew-text {
+    font-size: 2rem;
+    line-height: 1.8;
+    margin: 10px 0;
+    color: var(--text-color);
+}
+
+/* Estilos para caracteres hebraicos */
+.hebrew-character {
+    font-size: 3rem;
+    margin: 20px 0;
+    color: var(--text-color);
+}
+
+/* Ajustes para o layout responsivo */
+@media (max-width: 768px) {
+    .hebrew-text {
+        font-size: 1.6rem;
+    }
+    
+    .hebrew-character {
+        font-size: 2.6rem;
+    }
+}
+
+/* Estilos para o rodapé */
+footer {
+    margin-top: 50px;
+    padding: 20px 0;
+    background-color: var(--footer-bg);
+    color: var(--footer-text);
+}
+
+footer a {
+    color: var(--link-color);
+}
+
+footer a:hover {
+    color: var(--link-hover-color);
+}
+
+/* Estilos para a navbar */
+.navbar {
+    background-color: var(--navbar-bg) !important;
+}
+
+.navbar-dark .navbar-brand,
+.navbar-dark .navbar-nav .nav-link {
+    color: var(--navbar-text);
+}
+
+.navbar-dark .navbar-nav .nav-link:hover {
+    color: var(--link-hover-color);
+}
+
+/* Estilos para o logo */
+#site-logo {
+    height: 80px; /* Ajuste conforme o tamanho desejado */
+    width: auto;
+    vertical-align: middle;
+}
+
+/* Estilos para cartões */
+.card {
+    margin-bottom: 20px;
+    background-color: var(--card-background);
+    box-shadow: var(--card-shadow);
+    max-width: 100%;
+    color: var(--text-color);
+}
+
+.card-header {
+    background-color: var(--card-background);
+    color: var(--text-color);
+}
+
+.card-body {
+    padding: 15px;
+}
+
+.card-title {
+    font-size: 1.25rem;
+}
+
+.card-text {
+    font-size: 0.9rem;
+}
+
+/* Estilos para testes */
+.question {
+    padding: 20px;
+    border-radius: 5px;
+    background-color: var(--card-background);
+    margin-bottom: 20px;
+    color: var(--text-color);
+}
+
+/* Estilos para o painel de progresso */
+.progress {
+    height: 20px;
+    margin-bottom: 20px;
+    margin-top: 10px;
+    border-radius: 5px;
+    background-color: #e0e0e0; /* Fundo da barra de progresso (ajuste se necessário) */
+}
+
+.progress-bar {
+    font-size: 0.9rem;
+    line-height: 20px;
+    background-color: var(--progress-bar-bg);
+}
+
+/* Estilos para botões de ação */
+.action-buttons {
+    margin-top: 20px;
+}
+
+.btn-primary {
+    font-size: 0.9rem;
+    padding: 8px 15px;
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    border-color: var(--button-bg);
+}
+
+.btn-primary:hover {
+    background-color: var(--link-hover-color);
+    border-color: var(--link-hover-color);
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: #ffffff;
+    border-color: #6c757d;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+    border-color: #5a6268;
+}
+.btn-terc {
+    background-color: #28d630;
+    color: #ffffff;
+    border-color: #6c757d;
+}
+
+.btn-terc:hover {
+    background-color: #57945a;
+    color: #ffffff;
+    border-color: #6c757d;
+}
+
+/* Estilos para listas */
+.list-group-item {
+    background-color: var(--list-group-bg);
+   提前color: var(--list-group-text);
+}
+
+/* Estilos para o dashboard */
+.container {
+    max-width: 1200px;
+}
+
+h1, h2, h3, h4 {
+    margin-bottom: 15px;
+    color: var(--text-color);
+}
+
+ul {
+    padding-left: 20px;
+    color: var(--text-color);
+}
+
+a {
+    color: var(--link-color);
+}
+
+a:hover {
+    color: var(--link-hover-color);
+}
+
+/* Definir variáveis CSS para os temas */
+:root {
+    /* Modo Claro (padrão) */
+    --background-color: #ffffff;
+    --text-color: #333333;
+    --card-background: #ffffff;
+    --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --navbar-bg: #007bff;
+    --navbar-text: #ffffff;
+    --footer-bg: #f8f9fa;
+    --footer-text: #333333;
+    --link-color: #007bff;
+    --link-hover-color: #0056b3;
+    --button-bg: #007bff;
+    --button-text: #ffffff;
+    --progress-bar-bg: #28a745;
+    --list-group-bg: #ffffff;
+    --list-group-text: #333333;
+}
+
+/* Modo Escuro */
+body.dark-mode {
+    --background-color: #1a1a1a;
+    --text-color: #e0e0e0;
+    --card-background: #2c2c2c;
+    --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    --navbar-bg: #003087;
+    --navbar-text: #e0e0e0;
+    --footer-bg: #2c2c2c;
+    --footer-text: #e0e0e0;
+    --link-color: #66b0ff;
+    --link-hover-color: #99cfff;
+    --button-bg: #0056b3;
+    --button-text: #e0e0e0;
+    --progress-bar-bg: #1f7a38;
+    --list-group-bg: #333333;
+    --list-group-text: #e0e0e0;
+}
+
+/* Aplicar as variáveis */
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+/* Estilos para a navbar */
+.navbar {
+    background-color: var(--navbar-bg) !important;
+}
+
+.navbar-dark .navbar-brand,
+.navbar-dark .navbar-nav .nav-link {
+    color: var(--navbar-text);
+}
+
+.navbar-dark .navbar-nav .nav-link:hover {
+    color: var(--link-hover-color);
+}
+
+/* Estilos para o logo */
+#site-logo {
+    height: 120px;
+    width: auto;
+    vertical-align: middle;
+}
+
+/* Estilos para cartões */
+.card {
+    margin-bottom: 20px;
+    background-color: var(--card-background);
+    box-shadow: var(--card-shadow);
+    max-width: 100%;
+    color: var(--text-color);
+}
+
+/* Estilos para o rodapé */
+footer {
+    background-color: var(--footer-bg);
+    color: var(--footer-text);
+}
+
+footer a {
+    color: var(--link-color);
+}
+
+footer a:hover {
+    color: var(--link-hover-color);
+}
+
+/* Estilos para botões */
+.btn-primary {
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    border-color: var(--button-bg);
+}
+
+.btn-primary:hover {
+    background-color: var(--link-hover-color);
+    border-color: var(--link-hover-color);
+}
+
+/* Estilos para listas */
+.list-group-item {
+    background-color: var(--list-group-bg);
+    color: var(--list-group-text);
+}
+
+/* Estilos gerais */
+.container {
+    max-width: 1200px;
+}
+
+h1, h2, h3, h4 {
+    color: var(--text-color);
+}
+
+a {
+    color: var(--link-color);
+}
+
+a:hover {
+    color: var(--link-hover-color);
+}

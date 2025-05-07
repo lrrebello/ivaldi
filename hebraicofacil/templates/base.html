@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}HebraicoFacil{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('index') }}">
+                <img id="site-logo" src="{{ url_for('static', filename='images/logo-imersão-fundo-branco.png') }}" alt="HebraicoFacil Logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('index') }}">Início</a>
+                    </li>
+                    {% if current_user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('lessons.dashboard') }}">Módulos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('bible.index') }}">Bíblia Hebraica</a>
+                        </li>
+                        {% with game_config = GameConfig.query.first() %}
+                            {% if game_config and (game_config.visible or current_user.role in ['s', 'a']) %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ url_for('game.index') }}">Jogo do Alfabeto</a>
+                                </li>
+                            {% endif %}
+                        {% endwith %}
+                    {% endif %}
+                </ul>
+                <ul class="navbar-nav">
+                    {% if current_user.is_authenticated %}
+                        {% if current_user.role == 'a' %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('admin.manage_users') }}">Gerenciar Usuários</a>
+                            </li>
+                        {% endif %}
+                        {% if current_user.role == 's' %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('admin.manage_modules') }}">Gerenciar Módulos</a>
+                            </li>
+                        {% endif %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('auth.account') }}">Minha Conta</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('auth.logout') }}">Sair</a>
+                        </li>
+                        <li class="nav-item">
+                            <button id="theme-toggle" class="btn btn-link nav-link">Alternar Tema</button>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('auth.login') }}">Entrar</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('auth.register') }}">Registrar</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </div>
+
+    
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+    <script>
+        // Função para aplicar o tema e atualizar o logo
+        function setTheme(theme) {
+            document.body.classList.remove('light-mode', 'dark-mode');
+            document.body.classList.add(theme);
+            localStorage.setItem('theme', theme);
+
+            // Atualizar o logo com base no tema
+            const logo = document.getElementById('site-logo');
+            if (theme === 'dark-mode') {
+                logo.src = "{{ url_for('static', filename='images/logo-imersão-fundo-escuro.png') }}";
+            } else {
+                logo.src = "{{ url_for('static', filename='images/logo-imersão-fundo-branco.png') }}";
+            }
+        }
+
+        // Detectar a preferência do sistema
+        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+        let currentTheme = localStorage.getItem('theme') || (prefersDarkScheme.matches ? 'dark-mode' : 'light-mode');
+        setTheme(currentTheme);
+
+        // Escutar mudanças na preferência do sistema
+        prefersDarkScheme.addEventListener('change', (e) => {
+            if (!localStorage.getItem('theme')) {
+                setTheme(e.matches ? 'dark-mode' : 'light-mode');
+            }
+        });
+
+        // Botão de alternância
+        document.getElementById('theme-toggle').addEventListener('click', () => {
+            currentTheme = currentTheme === 'light-mode' ? 'dark-mode' : 'light-mode';
+            setTheme(currentTheme);
+        });
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

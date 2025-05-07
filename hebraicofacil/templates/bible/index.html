@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}Bíblia Hebraica{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center">Bíblia Hebraica</h1>
+    
+    <!-- Seleção de Livro, Capítulo e Faixa de Versículos -->
+    <form id="bibleForm" method="GET" action="{{ url_for('bible.index') }}">
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <label for="book">Livro:</label>
+                <select name="book" id="book" class="form-control" onchange="this.form.submit()">
+                    {% for book in books %}
+                        <option value="{{ book }}" {% if book == selected_book %}selected{% endif %}>{{ book }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="chapter">Capítulo:</label>
+                <select name="chapter" id="chapter" class="form-control" onchange="this.form.submit()">
+                    {% for chapter in chapters %}
+                        <option value="{{ chapter }}" {% if chapter == selected_chapter %}selected{% endif %}>{{ chapter }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="verse_start">Versículo Inicial:</label>
+                <input type="number" name="verse_start" id="verse_start" class="form-control" value="{{ verse_start }}" min="1" max="{{ verse_count }}">
+            </div>
+            <div class="col-md-3">
+                <label for="verse_end">Versículo Final:</label>
+                <input type="number" name="verse_end" id="verse_end" class="form-control" value="{{ verse_end }}" min="1" max="{{ verse_count }}">
+                <button type="submit" class="btn btn-primary mt-2">Ir</button>
+            </div>
+        </div>
+    </form>
+
+    <!-- Exibição dos Versículos -->
+    <div class="card">
+        <div class="card-body">
+            {% if verses %}
+                <h5>{{ selected_book }} {{ selected_chapter }}:{{ verse_start }}{% if verse_end > verse_start %}-{{ verse_end }}{% endif %}</h5>
+                <ul class="list-group">
+                    {% for verse in verses %}
+                        <li class="list-group-item hebrew-text">
+                            [{{ verse.verse }}] {{ verse.text }}
+                        </li>
+                    {% endfor %}
+                </ul>
+                <!-- Botões de Navegação -->
+                <div class="action-buttons text-center mt-3">
+                    <button id="prevVerse" class="btn btn-secondary" {% if not has_prev_verse %}disabled{% endif %}>Anterior</button>
+                    <button id="nextVerse" class="btn btn-secondary" {% if not has_next_verse %}disabled{% endif %}>Próximo</button>
+                </div>
+            {% else %}
+                <p class="text-center">Nenhum versículo encontrado.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript para navegação dos versículos -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const prevButton = document.getElementById('prevVerse');
+    const nextButton = document.getElementById('nextVerse');
+    const verseStartInput = document.getElementById('verse_start');
+    const verseEndInput = document.getElementById('verse_end');
+    const form = document.getElementById('bibleForm');
+
+    if (prevButton) {
+        prevButton.addEventListener('click', function() {
+            let verseStart = parseInt(verseStartInput.value);
+            let verseEnd = parseInt(verseEndInput.value);
+            if (verseStart > 1) {
+                let range = verseEnd - verseStart;
+                verseStartInput.value = verseStart - 1;
+                verseEndInput.value = verseStart - 1 + range;
+                form.submit();
+            }
+        });
+    }
+
+    if (nextButton) {
+        nextButton.addEventListener('click', function() {
+            let verseStart = parseInt(verseStartInput.value);
+            let verseEnd = parseInt(verseEndInput.value);
+            let range = verseEnd - verseStart;
+            verseStartInput.value = verseStart + 1;
+            verseEndInput.value = verseStart + 1 + range;
+            form.submit();
+        });
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+
+{% block title %}Painel de Administração - HebraicoFacil{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12 mb-4">
+        <h1>Painel de Administração</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="card-title mb-0">Estatísticas de Usuários</h4>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-6 mb-3">
+                        <h5>Total</h5>
+                        <h2>{{ user_stats.total }}</h2>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <h5>Alunos</h5>
+                        <h2>{{ user_stats.student }}</h2>
+                    </div>
+                    <div class="col-6">
+                        <h5>Professores</h5>
+                        <h2>{{ user_stats.teacher }}</h2>
+                    </div>
+                    <div class="col-6">
+                        <h5>Administradores</h5>
+                        <h2>{{ user_stats.admin }}</h2>
+                    </div>
+                </div>
+                <div class="d-grid gap-2 mt-3">
+                    <a href="{{ url_for('admin.manage_users') }}" class="btn btn-primary">Gerenciar Usuários</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="card-title mb-0">Estatísticas de Pagamentos</h4>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-6 mb-3">
+                        <h5>Total</h5>
+                        <h2>{{ payment_stats.total }}</h2>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <h5>Aprovados</h5>
+                        <h2>{{ payment_stats.successful }}</h2>
+                    </div>
+                    <div class="col-6">
+                        <h5>Pendentes</h5>
+                        <h2>{{ payment_stats.pending }}</h2>
+                    </div>
+                    <div class="col-6">
+                        <h5>Recusados</h5>
+                        <h2>{{ payment_stats.failed }}</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="card-title mb-0">Ações Rápidas</h4>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('admin.create_user') }}" class="btn btn-success mb-2">Criar Novo Usuário</a>
+                    <a href="{{ url_for('admin.manage_modules') }}" class="btn btn-info mb-2">Gerenciar Módulos</a>
+                    <a href="{{ url_for('admin.manage_course_price') }}" class="btn btn-warning mb-2">Configurar Preço do Curso</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="card-title mb-0">Usuários Recentes</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>E-mail</th>
+                                <th>Tipo</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in recent_users %}
+                                <tr>
+                                    <td>{{ user.name }}</td>
+                                    <td>{{ user.email }}</td>
+                                    <td>{{ format_user_role(user.role) }}</td>
+                                    <td>
+                                        <a href="{{ url_for('admin.edit_user', user_id=user.id) }}" class="btn btn-sm btn-primary">Editar</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="card-title mb-0">Pagamentos Recentes</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Usuário</th>
+                                <th>Valor</th>
+                                <th>Método</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for payment in recent_payments %}
+                                <tr>
+                                    <td>{{ payment.user.name }}</td>
+                                    <td>R$ {{ payment.amount }}</td>
+                                    <td>{{ payment.payment_method }}</td>
+                                    <td>{{ payment.payment_status }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,297 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if test.type == 'consonants' %}
+        Teste de Consoantes - Módulo {{ test.module.module_number }}
+    {% elif test.type == 'vowels' %}
+        Teste de Vogais - Módulo {{ test.module.module_number }}
+    {% elif test.type == 'syllables' %}
+        Teste de Sílabas - Módulo {{ test.module.module_number }}
+    {% else %}
+        Teste de {{ test.type }} - Módulo {{ test.module.module_number }}
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card mt-4">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0">
+                {% if test.type == 'consonants' %}
+                    Teste de Consoantes - Módulo {{ test.module.module_number }}
+                {% elif test.type == 'vowels' %}
+                    Teste de Vogais - Módulo {{ test.module.module_number }}
+                {% elif test.type == 'syllables' %}
+                    Teste de Sílabas - Módulo {{ test.module.module_number }}
+                {% else %}
+                    Teste de {{ test.type }} - Módulo {{ test.module.module_number }}
+                {% endif %}
+            </h2>
+        </div>
+        <div class="card-body">
+            <!-- Progress Bar -->
+            <div class="progress mb-4">
+                <div id="progress-bar" class="progress-bar bg-success" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+            </div>
+
+            <!-- Container do Teste -->
+            <div id="test-container">
+                <div id="question-container"></div>
+                <div id="feedback-container" class="text-center mt-3" style="display: none;">
+                    <p id="feedback-message"></p>
+                </div>
+                <div class="text-center mt-4">
+                    <button id="next-btn" class="btn btn-primary">Próxima</button>
+                </div>
+            </div>
+
+            <!-- Container de Resultados -->
+            <div id="results-container" style="display: none;">
+                <h3 class="text-center mb-4">Resultados do Teste</h3>
+                <p class="text-center">
+                    Respostas corretas: <span id="correct-answers"></span> de <span id="total-questions"></span>
+                </p>
+                <p class="text-center">
+                    Respostas incorretas: <span id="incorrect-answers"></span>
+                </p>
+                <p class="text-center">
+                    Aproveitamento Geral: <span id="progress-percentage"></span>%
+                </p>
+                <div id="incorrect-characters" class="text-center mb-4">
+                    <h5>Caracteres respondidos incorretamente:</h5>
+                    <p id="incorrect-characters-list" class="hebrew-character"></p>
+                </div>
+                <div class="text-center">
+                    <a href="{{ url_for('lessons.test_lesson', module_id=test.module.id, lesson_type=test.type) }}" class="btn btn-success">Tentar Novamente</a>
+                    <a href="{{ url_for('lessons.module_view', module_id=test.module.id) }}" class="btn btn-primary">Voltar ao Módulo</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="text-center mt-5">
+        <p><strong>HEBRAICOFÁCIL</strong><br>Aprenda hebraico de forma fácil e prática.</p>
+        <div>
+            <strong>LINKS</strong><br>
+            <a href="{{ url_for('index') }}">Início</a> |
+            {% if current_user.is_authenticated %}
+            <a href="{{ url_for('auth.account') }}">Minha Conta</a> |
+            <a href="{{ url_for('auth.logout') }}">Sair</a>
+            {% else %}
+            <a href="{{ url_for('auth.login') }}">Entrar</a> |
+            <a href="{{ url_for('auth.register') }}">Registrar</a>
+            {% endif %}
+        </div>
+    </footer>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    console.log("JavaScript carregado");
+    const testData = {{ test | tojson | safe }};
+    console.log("testData:", testData);
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log("DOM carregado");
+        
+        // Variáveis de estado
+        let currentQuestion = 0;
+        let correctAnswers = 0;
+        let answers = [];
+        
+        // Elementos DOM
+        const questionContainer = document.getElementById('question-container');
+        const progressBar = document.getElementById('progress-bar');
+        const nextBtn = document.getElementById('next-btn');
+        const testContainer = document.getElementById('test-container');
+        const resultsContainer = document.getElementById('results-container');
+        const correctAnswersEl = document.getElementById('correct-answers');
+        const incorrectAnswersEl = document.getElementById('incorrect-answers');
+        const totalQuestionsEl = document.getElementById('total-questions');
+        const progressPercentageEl = document.getElementById('progress-percentage');
+        const incorrectCharactersList = document.getElementById('incorrect-characters-list');
+        const feedbackContainer = document.getElementById('feedback-container');
+        const feedbackMessage = document.getElementById('feedback-message');
+        
+        // Inicializar teste
+        console.log("Inicializando teste, número de perguntas:", testData.questions.length);
+        totalQuestionsEl.textContent = testData.questions.length;
+        if (testData.questions.length === 0) {
+            console.log("Nenhuma pergunta disponível");
+            questionContainer.innerHTML = '<p>Não há perguntas disponíveis para este teste.</p>';
+            nextBtn.style.display = 'none';
+            return;
+        }
+        showQuestion(currentQuestion);
+        
+        // Evento de clique no botão "Próxima"
+        nextBtn.addEventListener('click', function() {
+            const selectedOption = document.querySelector('input[name="answer"]:checked');
+            
+            if (!selectedOption) {
+                alert('Por favor, selecione uma resposta.');
+                return;
+            }
+            
+            // Verificar resposta
+            const question = testData.questions[currentQuestion];
+            const isCorrect = selectedOption.value === question.correct;
+            
+            if (isCorrect) {
+                correctAnswers++;
+                feedbackMessage.innerHTML = '<span class="text-success">Correto!</span>';
+            } else {
+                feedbackMessage.innerHTML = `<span class="text-danger">Incorreto!</span>`; // A resposta correta para <strong>${question.character}</strong> é <strong>${question.correct}</strong>.
+            }
+            
+            // Mostrar feedback
+            feedbackContainer.style.display = 'block';
+            nextBtn.disabled = true; // Desabilitar o botão até o feedback ser lido
+            
+            // Habilitar o botão após 1 segundo
+            setTimeout(() => {
+                feedbackContainer.style.display = 'none';
+                nextBtn.disabled = false;
+                
+                answers.push({
+                    question: currentQuestion,
+                    character: question.character,
+                    answer: selectedOption.value,
+                    correct: isCorrect
+                });
+                
+                // Avançar para a próxima pergunta ou finalizar o teste
+                currentQuestion++;
+                
+                if (currentQuestion < testData.questions.length) {
+                    showQuestion(currentQuestion);
+                } else {
+                    completeTest();
+                }
+            }, 1000); // 1 segundo de delay para o feedback
+        });
+        
+        // Função para exibir uma pergunta
+        function showQuestion(index) {
+            console.log("Exibindo pergunta", index);
+            const question = testData.questions[index];
+            const progress = ((index + 1) / testData.questions.length) * 100;
+            
+            progressBar.style.width = progress + '%';
+            progressBar.setAttribute('aria-valuenow', progress);
+            progressBar.textContent = Math.round(progress) + '%';
+            
+            // Embaralhar opções
+            const options = [...question.options];
+            shuffleArray(options);
+            
+            // Criar HTML da pergunta
+            let html = `
+                <div class="question">
+                    <h3 class="text-center mb-4">Questão ${index + 1} de ${testData.questions.length}</h3>
+                    <div class="hebrew-character text-center mb-4">
+                        <h1 class="display-1">${question.character}</h1>
+                    </div>
+                    <div class="options">
+            `;
+            
+            options.forEach((option, i) => {
+                html += `
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="radio" name="answer" id="option${i}" value="${option}">
+                        <label class="form-check-label" for="option${i}">
+                            ${option}
+                        </label>
+                    </div>
+                `;
+            });
+            
+            html += `
+                    </div>
+                </div>
+            `;
+            
+            questionContainer.innerHTML = html;
+            
+            // Atualizar texto do botão na última pergunta
+            if (index === testData.questions.length - 1) {
+                nextBtn.textContent = 'Finalizar';
+            } else {
+                nextBtn.textContent = 'Próxima';
+            }
+        }
+        
+        // Função para finalizar o teste
+        function completeTest() {
+            console.log("Finalizando teste, respostas corretas:", correctAnswers);
+            
+            // Exibir resultados
+            correctAnswersEl.textContent = correctAnswers;
+            incorrectAnswersEl.textContent = testData.questions.length - correctAnswers;
+            
+            // Identificar caracteres respondidos incorretamente
+            const incorrectCharacters = answers
+                .filter(answer => !answer.correct)
+                .map(answer => answer.character);
+            
+            if (incorrectCharacters.length > 0) {
+                incorrectCharactersList.textContent = incorrectCharacters.join(', ');
+            } else {
+                incorrectCharactersList.textContent = 'Nenhum erro! Parabéns!';
+            }
+            
+            // Dados a serem enviados
+            const requestData = {
+                module_id: testData.module.id,
+                lesson_type: testData.type,
+                correct_answers: correctAnswers,
+                total_questions: testData.questions.length
+            };
+            console.log("Dados enviados para /complete_test:", requestData);
+            
+            // Enviar resultados para o servidor
+            fetch('{{ url_for("lessons.complete_test") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestData)
+            })
+            .then(response => {
+                console.log("Resposta recebida:", response);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("Dados da resposta:", data);
+                if (data.success) {
+                    progressPercentageEl.textContent = data.progress_percentage;
+                    
+                    // Mostrar resultados
+                    testContainer.style.display = 'none';
+                    resultsContainer.style.display = 'block';
+                } else {
+                    console.error("Erro retornado pelo servidor:", data.message);
+                    alert('Erro ao salvar resultados: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Erro ao enviar requisição:', error);
+                alert('Erro ao enviar o teste: ' + error.message);
+            });
+        }
+        
+        // Função para embaralhar array
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+    });
+</script>
+{% endblock %}

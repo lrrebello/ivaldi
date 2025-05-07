@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Bíblia Hebraica{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-center mb-4">Bíblia Hebraica</h1>
+    
+    <div class="row mb-4">
+        <div class="col-md-6 offset-md-3">
+            <form action="{{ url_for('bible.search') }}" method="post" class="card p-3">
+                <div class="form-group">
+                    <label for="query">Pesquisar na Bíblia:</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="query" name="query" placeholder="Digite uma palavra ou frase...">
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-primary">Pesquisar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group mt-2">
+                    <label>Filtrar por:</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="testament" id="all" value="" checked>
+                        <label class="form-check-label" for="all">Toda a Bíblia</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="testament" id="tanakh" value="tanakh">
+                        <label class="form-check-label" for="tanakh">Tanakh (תנ״ך)</label>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="text-center">Livros da Bíblia</h3>
+                </div>
+                <div class="card-body">
+                    <h4>Tanakh (תנ״ך)</h4>
+                    <div class="row">
+                        {% for book in books %}
+                            {% if book.testament == 'tanakh' %}
+                                <div class="col-md-3 mb-3">
+                                    <a href="{{ url_for('bible.book', book_id=book.id) }}" class="btn btn-outline-primary btn-block">
+                                        <div class="hebrew-text">{{ book.name_hebrew }}</div>
+                                        <div>{{ book.name_portuguese }}</div>
+                                        <small class="text-muted">{{ book.name_transliterated }}</small>
+                                    </a>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block styles %}
+<style>
+    .hebrew-text {
+        font-size: 1.2em;
+        font-family: 'Times New Roman', serif;
+        direction: rtl;
+        margin-bottom: 5px;
+    }
+    .btn-block {
+        display: block;
+        width: 100%;
+    }
+</style>
+{% endblock %}

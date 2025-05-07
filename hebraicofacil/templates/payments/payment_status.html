@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Status do Pagamento - HebraicoFacil{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h3 class="card-title mb-0">Status do Pagamento</h3>
+            </div>
+            <div class="card-body text-center">
+                {% if payment.status == 'Pago' or payment.status == 'Autorizado' %}
+                    <div class="alert alert-success" role="alert">
+                        <h4 class="alert-heading">Pagamento Aprovado!</h4>
+                        <p>Seu pagamento foi processado com sucesso.</p>
+                    </div>
+                {% elif payment.status == 'Pendente' or payment.status == 'Processando' or payment.status == 'Aguardando pagamento' %}
+                    <div class="alert alert-warning" role="alert">
+                        <h4 class="alert-heading">Pagamento Pendente</h4>
+                        <p>Seu pagamento está sendo processado.</p>
+                    </div>
+                {% else %}
+                    <div class="alert alert-danger" role="alert">
+                        <h4 class="alert-heading">Pagamento Recusado</h4>
+                        <p>Houve um problema com seu pagamento. Por favor, tente novamente.</p>
+                    </div>
+                {% endif %}
+                
+                <div class="mt-4">
+                    <h5>Detalhes do Pagamento</h5>
+                    <p><strong>Valor:</strong> {{ payment.amount }}</p>
+                    <p><strong>Método:</strong> {{ payment.payment_method }}</p>
+                    <p><strong>Status:</strong> {{ payment.status }}</p>
+                    
+                    {% if payment.payment_method == 'Boleto' and payment.boleto_url %}
+                        <div class="mt-3">
+                            <h5>Informações do Boleto</h5>
+                            <p><strong>Código de Barras:</strong> {{ payment.boleto_barcode }}</p>
+                            <a href="{{ payment.boleto_url }}" target="_blank" class="btn btn-primary">Visualizar Boleto</a>
+                        </div>
+                    {% elif payment.payment_method == 'Pix' and payment.pix_qr_code %}
+                        <div class="mt-3">
+                            <h5>Informações do Pix</h5>
+                            <p>Escaneie o QR Code abaixo ou use o código copia-e-cola para realizar o pagamento:</p>
+                            <img src="{{ payment.pix_qr_code_url }}" alt="QR Code Pix" class="img-fluid" style="max-width: 200px;">
+                            <div class="mt-3">
+                                <p><strong>Código Copia-e-Cola:</strong></p>
+                                <textarea class="form-control" rows="4" readonly>{{ payment.pix_qr_code }}</textarea>
+                                <button class="btn btn-primary mt-2" onclick="copyPixCode()">Copiar Código</button>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <div class="mt-4">
+                    <a href="{{ url_for('lessons.dashboard') }}" class="btn btn-primary">Ir para o Painel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function copyPixCode() {
+        const textarea = document.querySelector('textarea');
+        textarea.select();
+        document.execCommand('copy');
+        alert('Código Pix copiado para a área de transferência!');
+    }
+</script>
+{% endblock %}

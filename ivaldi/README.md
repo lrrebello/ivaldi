@@ -103,3 +103,4 @@ A nova estrutura modular traz os seguintes benefícios:
 4. Implementar um sistema de logging mais robusto
 5. Adicionar validação de formulários com Flask-WTF
 # projeto_modular
+# ivaldi

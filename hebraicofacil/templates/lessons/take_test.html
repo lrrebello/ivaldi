@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Prova {{ test_number }} - Módulo {{ module.module_number }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Prova {{ test_number }} - Módulo {{ module.module_number }}</h1>
+    <form method="POST">
+        <div class="mb-3">
+            <label for="score" class="form-label">Score (0 a 100):</label>
+            <input type="number" class="form-control" id="score" name="score" min="0" max="100" value="100" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Enviar Prova</button>
+    </form>
+</div>
+{% endblock %}

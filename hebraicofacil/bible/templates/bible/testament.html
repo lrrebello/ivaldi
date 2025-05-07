@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}{{ testament|title }} - Bíblia Hebraica{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('bible.index') }}">Bíblia Hebraica</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
+        </ol>
+    </nav>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h1 class="text-center">{{ title }}</h1>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                {% for book in books %}
+                    <div class="col-md-3 mb-3">
+                        <a href="{{ url_for('bible.book', book_id=book.id) }}" class="btn btn-outline-primary btn-block">
+                            <div class="hebrew-text">{{ book.name_hebrew }}</div>
+                            <div>{{ book.name_portuguese }}</div>
+                            <small class="text-muted">{{ book.name_transliterated }}</small>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block styles %}
+<style>
+    .hebrew-text {
+        font-size: 1.2em;
+        font-family: 'Times New Roman', serif;
+        direction: rtl;
+        margin-bottom: 5px;
+    }
+    .btn-block {
+        display: block;
+        width: 100%;
+    }
+</style>
+{% endblock %}

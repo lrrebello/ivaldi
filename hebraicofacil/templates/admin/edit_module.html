@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Editar Módulo - HebraicoFacil{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h3 class="card-title mb-0">Editar Módulo {{ module.module_number }}</h3>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('admin.edit_module', module_id=module.id) }}">
+                    <div class="mb-3">
+                        <label for="hebrew_text" class="form-label">Texto Hebraico</label>
+                        <textarea class="form-control" id="hebrew_text" name="hebrew_text" rows="3" dir="rtl" required>{{ module.hebrew_text }}</textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="consonants" class="form-label">Consoantes (separadas por vírgula)</label>
+                        <input type="text" class="form-control" id="consonants" name="consonants" value="{{ module.consonants }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="vowels" class="form-label">Vogais (separadas por vírgula)</label>
+                        <input type="text" class="form-control" id="vowels" name="vowels" value="{{ module.vowels }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="syllables" class="form-label">Sílabas (separadas por vírgula)</label>
+                        <input type="text" class="form-control" id="syllables" name="syllables" value="{{ module.syllables }}" required>
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="visible" name="visible" {% if module.visible %}checked{% endif %}>
+                        <label class="form-check-label" for="visible">Módulo Visível</label>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="mt-3">
+            <a href="{{ url_for('admin.manage_modules') }}" class="btn btn-secondary">Voltar para Gerenciar Módulos</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

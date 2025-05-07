@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}
+{% if lesson.type == 'consonants' %}
+Consoantes - Módulo {{ lesson.module.module_number }}
+{% elif lesson.type == 'vowels' %}
+Vogais - Módulo {{ lesson.module.module_number }}
+{% else %}
+Sílabas - Módulo {{ lesson.module.module_number }}
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card mt-4">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0">
+                {% if lesson.type == 'consonants' %}
+                Consoantes - Módulo {{ lesson.module.module_number }}
+                {% elif lesson.type == 'vowels' %}
+                Vogais - Módulo {{ lesson.module.module_number }}
+                {% else %}
+                Sílabas - Módulo {{ lesson.module.module_number }}
+                {% endif %}
+            </h2>
+        </div>
+        <div class="card-body">
+            <!-- Exibir texto hebraico do módulo -->
+            <div class="text-center mb-4">
+                <h3 class="hebrew-text">{{ lesson.module.hebrew_text }}</h3>
+            </div>
+
+            <!-- Exibir caracteres (consoantes, vogais ou sílabas) -->
+            {% if lesson.characters %}
+                <div class="row">
+                    {% for character in lesson.characters %}
+                        <div class="col-md-4 mb-4">
+                            <div class="card">
+                                <div class="card-body text-center">
+                                    <h1 class="hebrew-character">{{ character.caractere }}</h1>
+                                    <p>
+                                        <strong>{{ character.nome or 'Sem nome' }}</strong><br>
+                                        Transliteração: 
+                                        {% if character.transliteracao %}
+                                            {% for translit in character.transliteracao %}
+                                                {{ translit }}{% if not loop.last %}, {% endif %}
+                                            {% endfor %}
+                                        {% else %}
+                                            Sem transliteração disponível
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-center">Nenhuma sílaba disponível para exibição.</p>
+            {% endif %}
+
+            <!-- Botão para iniciar o teste -->
+            <div class="text-center mt-4">
+                <a href="{{ url_for('lessons.test_lesson', module_id=lesson.module.id, lesson_type=lesson.type) }}" class="btn btn-success">Testar Conhecimento</a>
+                <a href="{{ url_for('lessons.module_view', module_id=lesson.module.id) }}" class="btn btn-secondary">Voltar ao Módulo</a>
+            </div>
+        </div>
+    </div>
+
+    <footer class="text-center mt-5">
+        <p><strong>HEBRAICOFÁCIL</strong><br>Aprenda hebraico de forma fácil e prática.</p>
+        <div>
+            <strong>LINKS</strong><br>
+            <a href="{{ url_for('index') }}">Início</a> |
+            {% if current_user.is_authenticated %}
+            <a href="{{ url_for('auth.account') }}">Minha Conta</a> |
+            <a href="{{ url_for('auth.logout') }}">Sair</a>
+            {% else %}
+            <a href="{{ url_for('auth.login') }}">Entrar</a> |
+            <a href="{{ url_for('auth.register') }}">Registrar</a>
+            {% endif %}
+        </div>
+    </footer>
+</div>
+{% endblock %}

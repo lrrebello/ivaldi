@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Conclusão do Jogo - HebraicoFacil{% endblock %}
+
+{% block extra_css %}
+<style>
+    .container-complete {
+        background: linear-gradient(to bottom, #ffffff, #f5f7fa);
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    h1 {
+        color: #1b5e91;
+        margin-bottom: 20px;
+        font-size: 1.75rem;
+    }
+    p {
+        color: #455a64;
+        margin-bottom: 20px;
+        white-space: pre-wrap;
+    }
+    .dark-mode .container-complete {
+        background: linear-gradient(to bottom, #37474f, #2e3b43);
+    }
+    .dark-mode h1 {
+        color: #4fc3f7;
+    }
+    .dark-mode p {
+        color: #eceff1;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-complete mt-4">
+    <h1>Parabéns!</h1>
+    <p>{{ message }}</p>
+    {% if has_errors %}
+        <a href="{{ url_for('game.retry_errors') }}" class="btn btn-primary mb-2">Refazer Letras Erradas</a>
+    {% endif %}
+    <a href="{{ url_for('game.reset') }}" class="btn btn-primary">Reiniciar Jogo</a>
+</div>
+{% endblock %}

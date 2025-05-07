@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Módulo {{ module.module_number }} - HebraicoFacil{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12 mb-4">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h3 class="card-title mb-0">Módulo {{ module.module_number }}</h3>
+            </div>
+            <div class="card-body">
+                <div class="hebrew-text text-center mb-4">
+                    <h2 dir="rtl">{{ module.hebrew_text }}</h2>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card h-100">
+                            <div class="card-header bg-info text-white">
+                                <h5 class="card-title mb-0">Consoantes</h5>
+                            </div>
+                            <div class="card-body">
+                                <p>Aprenda as consoantes hebraicas.</p>
+                                <div class="d-grid gap-2">
+                                    <a href="{{ url_for('lessons.lesson', module_id=module.id, lesson_type='consonants') }}" class="btn btn-outline-primary">Estudar Consoantes</a>
+                                    <a href="{{ url_for('lessons.test_lesson', module_id=module.id, lesson_type='consonants') }}" class="btn btn-outline-success">Testar Conhecimento</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="card h-100">
+                            <div class="card-header bg-info text-white">
+                                <h5 class="card-title mb-0">Vogais</h5>
+                            </div>
+                            <div class="card-body">
+                                <p>Aprenda as vogais hebraicas deste módulo.</p>
+                                <div class="d-grid gap-2">
+                                    <a href="{{ url_for('lessons.lesson', module_id=module.id, lesson_type='vowels') }}" class="btn btn-outline-primary">Estudar Vogais</a>
+                                    <a href="{{ url_for('lessons.test_lesson', module_id=module.id, lesson_type='vowels') }}" class="btn btn-outline-success">Testar Conhecimento</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="card h-100">
+                            <div class="card-header bg-info text-white">
+                                <h5 class="card-title mb-0">Sílabas</h5>
+                            </div>
+                            <div class="card-body">
+                                <p>Aprenda as sílabas hebraicas deste módulo.</p>
+                                <div class="d-grid gap-2">
+                                    <a href="{{ url_for('lessons.lesson', module_id=module.id, lesson_type='syllables') }}" class="btn btn-outline-primary">Estudar Sílabas</a>
+                                    <a href="{{ url_for('lessons.test_lesson', module_id=module.id, lesson_type='syllables') }}" class="btn btn-outline-success">Testar Conhecimento</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <a href="{{ url_for('lessons.dashboard') }}" class="btn btn-secondary">Voltar para o Painel</a>
+    </div>
+</div>
+{% endblock %}

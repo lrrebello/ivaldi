@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard do Professor - HebraicoFacil{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Dashboard do Professor</h1>
+    <p>Bem-vindo, {{ current_user.name }}! Você é um professor.</p>
+    <h3>Módulos Ativos</h3>
+    <ul>
+        {% for module in modules %}
+            <li>{{ module.module_number }} - {{ module.hebrew_text }}</li>
+        {% endfor %}
+    </ul>
+    <h3>Alunos Cadastrados</h3>
+    <p>Total de alunos: {{ student_count }}</p>
+    <ul>
+        {% for student in students %}
+            <li>{{ student.name }} (ID: {{ student.id }})</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

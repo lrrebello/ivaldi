@@ -1,0 +1,244 @@
+{% extends "base.html" %}
+
+{% block title %}Pagamento - HebraicoFacil{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h3 class="card-title mb-0">Pagamento</h3>
+            </div>
+            <div class="card-body">
+                <h4>Curso Básico de Hebraico</h4>
+                <p>Valor: R$ {{ "%.2f"|format(price) }}</p>
+                <hr>
+
+                <!-- Exibir mensagens flash -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <!-- Abas para métodos de pagamento -->
+                <ul class="nav nav-tabs" id="paymentTabs" role="tablist">
+                    <!--<li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="credit-card-tab" data-bs-toggle="tab" data-bs-target="#credit-card" type="button" role="tab" aria-controls="credit-card" aria-selected="true">Cartão de Crédito</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="boleto-tab" data-bs-toggle="tab" data-bs-target="#boleto" type="button" role="tab" aria-controls="boleto" aria-selected="false">Boleto</button>
+                    </li>-->
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pix-tab" data-bs-toggle="tab" data-bs-target="#pix" type="button" role="tab" aria-controls="pix" aria-selected="false">Pix</button>
+                    </li>
+                </ul>
+
+                <!-- Conteúdo das abas -->
+                <div class="tab-content mt-3" id="paymentTabsContent">
+                    <!-- Aba Cartão de Crédito -->
+                    <!-- <div class="tab-pane fade show active" id="credit-card" role="tabpanel" aria-labelledby="credit-card-tab">
+                        <form method="POST" action="{{ url_for('payments.payment') }}">
+                            <input type="hidden" name="payment_method" value="credit_card">
+
+                            <h5>Informações do Cartão</h5>
+                            <div class="mb-3">
+                                <label for="card_number" class="form-label">Número do Cartão</label>
+                                <input type="text" class="form-control" id="card_number" name="card_number" placeholder="0000 0000 0000 0000" required>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="card_holder" class="form-label">Nome no Cartão</label>
+                                    <input type="text" class="form-control" id="card_holder" name="card_holder" placeholder="NOME COMO ESTÁ NO CARTÃO" required>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="card_expiry" class="form-label">Validade</label>
+                                    <input type="text" class="form-control" id="card_expiry" name="card_expiry" placeholder="MM/AA" required>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="card_cvv" class="form-label">CVV</label>
+                                    <input type="text" class="form-control" id="card_cvv" name="card_cvv" placeholder="123" required>
+                                </div>
+                            </div>
+
+                            <h5>Endereço de Cobrança</h5>
+                            <div class="mb-3">
+                                <label for="street" class="form-label">Rua</label>
+                                <input type="text" class="form-control" id="street" name="street" value="{{ current_user.address }}" required>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <label for="street_number" class="form-label">Número</label>
+                                    <input type="text" class="form-control" id="street_number" name="street_number" placeholder="Ex.: 100" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="neighborhood" class="form-label">Bairro</label>
+                                    <input type="text" class="form-control" id="neighborhood" name="neighborhood" placeholder="Ex.: Centro" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="zipcode" class="form-label">CEP</label>
+                                    <input type="text" class="form-control" id="zipcode" name="zipcode" value="{{ current_user.cep }}" required>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="city" class="form-label">Cidade</label>
+                                    <input type="text" class="form-control" id="city" name="city" placeholder="Ex.: São Paulo" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="state" class="form-label">Estado (UF)</label>
+                                    <input type="text" class="form-control" id="state" name="state" placeholder="Ex.: SP" maxlength="2" required>
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-success">Pagar com Cartão</button>
+                            </div>
+                        </form>
+                    </div>-->
+
+                    <!-- Aba Boleto -->
+                    <!--<div class="tab-pane fade" id="boleto" role="tabpanel" aria-labelledby="boleto-tab">
+                        <p>Ao gerar o boleto, você terá até a data de vencimento para efetuar o pagamento. O acesso ao curso será liberado após a confirmação do pagamento.</p>
+
+                        <form method="POST" action="{{ url_for('payments.payment') }}">
+                            <input type="hidden" name="payment_method" value="boleto">
+
+                            <h5>Endereço de Cobrança</h5>
+                            <div class="mb-3">
+                                <label for="street_boleto" class="form-label">Rua</label>
+                                <input type="text" class="form-control" id="street_boleto" name="street" value="{{ current_user.address }}" required>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <label for="street_number_boleto" class="form-label">Número</label>
+                                    <input type="text" class="form-control" id="street_number_boleto" name="street_number" placeholder="Ex.: 100" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="neighborhood_boleto" class="form-label">Bairro</label>
+                                    <input type="text" class="form-control" id="neighborhood_boleto" name="neighborhood" placeholder="Ex.: Centro" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="zipcode_boleto" class="form-label">CEP</label>
+                                    <input type="text" class="form-control" id="zipcode_boleto" name="zipcode" value="{{ current_user.cep }}" required>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="city_boleto" class="form-label">Cidade</label>
+                                    <input type="text" class="form-control" id="city_boleto" name="city" placeholder="Ex.: São Paulo" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="state_boleto" class="form-label">Estado (UF)</label>
+                                    <input type="text" class="form-control" id="state_boleto" name="state" placeholder="Ex.: SP" maxlength="2" required>
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-success">Gerar Boleto</button>
+                            </div>
+                        </form>
+                    </div>-->
+
+                    <!-- Aba Pix -->
+                    <div class="tab-pane fade" id="pix" role="tabpanel" aria-labelledby="pix-tab">
+                        <p>Ao gerar o Pix, você terá 1 hora para realizar o pagamento. O acesso ao curso será liberado após a confirmação do pagamento.</p>
+
+                        <form method="POST" action="{{ url_for('payments.payment') }}">
+                            <input type="hidden" name="payment_method" value="pix">
+
+                            <h5>Endereço de Cobrança</h5>
+                            <div class="mb-3">
+                                <label for="street_pix" class="form-label">Rua</label>
+                                <input type="text" class="form-control" id="street_pix" name="street" value="{{ current_user.address }}" required>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <label for="street_number_pix" class="form-label">Número</label>
+                                    <input type="text" class="form-control" id="street_number_pix" name="street_number" placeholder="Ex.: 100" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="neighborhood_pix" class="form-label">Bairro</label>
+                                    <input type="text" class="form-control" id="neighborhood_pix" name="neighborhood" placeholder="Ex.: Centro" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="zipcode_pix" class="form-label">CEP</label>
+                                    <input type="text" class="form-control" id="zipcode_pix" name="zipcode" value="{{ current_user.cep }}" required>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="city_pix" class="form-label">Cidade</label>
+                                    <input type="text" class="form-control" id="city_pix" name="city" placeholder="Ex.: São Paulo" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="state_pix" class="form-label">Estado (UF)</label>
+                                    <input type="text" class="form-control" id="state_pix" name="state" placeholder="Ex.: SP" maxlength="2" required>
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-success">Gerar Pix</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Máscaras para os campos
+    document.addEventListener('DOMContentLoaded', function() {
+        // Máscara para cartão (formato: 0000 0000 0000 0000)
+        const cardNumber = document.getElementById('card_number');
+        if (cardNumber) {
+            cardNumber.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                value = value.replace(/(\d{4})(\d)/, '$1 $2');
+                value = value.replace(/(\d{4}) (\d{4})(\d)/, '$1 $2 $3');
+                value = value.replace(/(\d{4}) (\d{4}) (\d{4})(\d)/, '$1 $2 $3 $4');
+                e.target.value = value;
+            });
+        }
+
+        // Máscara para validade (formato: MM/AA)
+        const cardExpiry = document.getElementById('card_expiry');
+        if (cardExpiry) {
+            cardExpiry.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length > 2) {
+                    value = value.substring(0, 2) + '/' + value.substring(2);
+                }
+                e.target.value = value.substring(0, 5);
+            });
+        }
+
+        // Máscara para CEP (formato: 00000-000)
+        const zipcodes = document.querySelectorAll('[id$="zipcode"], [id$="zipcode_boleto"], [id$="zipcode_pix"]');
+        zipcodes.forEach(function(zipcode) {
+            zipcode.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length > 5) {
+                    value = value.substring(0, 5) + '-' + value.substring(5);
+                }
+                e.target.value = value.substring(0, 9);
+            });
+        });
+
+        // Máscara para estado (2 caracteres)
+        const states = document.querySelectorAll('[id$="state"], [id$="state_boleto"], [id$="state_pix"]');
+        states.forEach(function(state) {
+            state.addEventListener('input', function(e) {
+                e.target.value = e.target.value.toUpperCase().substring(0, 2);
+            });
+        });
+    });
+</script>
+{% endblock %}

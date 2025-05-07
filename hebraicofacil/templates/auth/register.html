@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% block title %}Registro - HebraicoFacil{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h3 class="card-title mb-0">Registro</h3>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('auth.register') }}">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="name" class="form-label">Nome Completo</label>
+                            <input type="text" class="form-control" id="name" name="name" value="{{ request.form.name or '' }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="email" class="form-label">E-mail</label>
+                            <input type="email" class="form-control" id="email" name="email" value="{{ request.form.email or '' }}" required>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="password" class="form-label">Senha</label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="confirm_password" class="form-label">Confirmar Senha</label>
+                            <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="cpf" class="form-label">CPF</label>
+                            <input type="text" class="form-control" id="cpf" name="cpf" placeholder="000.000.000-00" value="{{ request.form.cpf or '' }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="birth_date" class="form-label">Data de Nascimento</label>
+                            <input type="text" class="form-control" id="birth_date" name="birth_date" placeholder="DD/MM/AAAA" value="{{ request.form.birth_date or '' }}" required>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="country" class="form-label">País</label>
+                            <select class="form-control" id="country" name="country" required>
+                                <option value="" disabled {% if not request.form.country %}selected{% endif %}>Selecione um país</option>
+                                <option value="BR" {% if request.form.country == 'BR' %}selected{% endif %}>Brasil</option>
+                                <option value="US" {% if request.form.country == 'US' %}selected{% endif %}>Estados Unidos</option>
+                                <option value="AR" {% if request.form.country == 'AR' %}selected{% endif %}>Argentina</option>
+                                <option value="PT" {% if request.form.country == 'PT' %}selected{% endif %}>Portugal</option>
+                                <!-- Add more countries as needed -->
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="state" class="form-label">Estado</label>
+                            <input type="text" class="form-control" id="state" name="state" value="{{ request.form.state or '' }}" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="address" class="form-label">Endereço</label>
+                        <input type="text" class="form-control" id="address" name="address" value="{{ request.form.address or '' }}" required>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="cep" class="form-label">CEP</label>
+                            <input type="text" class="form-control" id="cep" name="cep" placeholder="00000-000" value="{{ request.form.cep or '' }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="phone_number" class="form-label">Telefone</label>
+                            <input type="text" class="form-control" id="phone_number" name="phone_number" placeholder="DDNNNNNNNNN" value="{{ request.form.phone_number or '' }}" required>
+                        </div>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Registrar</button>
+                    </div>
+                </form>
+                <hr>
+                <div class="text-center">
+                    <p>Já tem uma conta? <a href="{{ url_for('auth.login') }}">Faça login</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for dynamic phone number masking -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+<script>
+$(document).ready(function(){
+    const phoneMasks = {
+        'BR': '(00) 00000-0000', // Brazil: +55 (DD) NNNNN-NNNN
+        'US': '(000) 000-0000',  // USA: +1 (DDD) DDD-DDDD
+        'AR': '(000) 000-0000',   // Argentina: +54 (DDD) DDD-DDDD
+        'PT': '(000) 000-000-000'   // Portugal: +351 (DDD) DDD-DDD-DDD
+        // Add more country masks as needed
+    };
+
+    const countryCodes = {
+        'BR': '+55',
+        'US': '+1',
+        'AR': '+54',
+        'PT': '+351'
+        // Add more country codes as needed
+    };
+
+    function applyPhoneMask() {
+        const country = $('#country').val();
+        const mask = phoneMasks[country] || '(00) 00000-0000'; // Default to Brazil mask if country not found
+        $('#phone_number').mask(mask);
+    }
+
+    // Apply mask on page load if a country is already selected
+    applyPhoneMask();
+
+    // Update mask when country changes
+    $('#country').change(function(){
+        applyPhoneMask();
+    });
+
+    // Ensure the country code is submitted with the form
+    $('form').submit(function(){
+        const country = $('#country').val();
+        const countryCode = countryCodes[country] || '+55'; // Default to +55 if not found
+        let phone = $('#phone_number').val();
+        // Remove any mask characters (like parentheses, spaces, dashes)
+        phone = phone.replace(/\D/g, '');
+        // Prepend the country code to the phone number
+        $('#phone_number').val(countryCode + phone);
+    });
+});
+</script>
+{% endblock %}

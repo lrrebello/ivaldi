@@ -1,0 +1,19 @@
+# Ambientes virtuais
+venv/
+env/
+virtualenv/
+
+# Arquivos de banco de dados
+*.db
+instance/*.db
+
+# Arquivos de configuração sensíveis
+.env
+
+# Arquivos de cache e compilados do Python
+__pycache__/
+*.pyc
+
+# Arquivos de build e logs
+*.log
+instance/

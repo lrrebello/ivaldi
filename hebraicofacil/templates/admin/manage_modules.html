@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Gerenciar Módulos - HebraicoFacil{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12 mb-4">
+        <h1>Gerenciar Módulos</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="card-title mb-0">Lista de Módulos</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Número</th>
+                                <th>Texto Hebraico</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for module in modules %}
+                                <tr>
+                                    <td>{{ module.id }}</td>
+                                    <td>{{ module.module_number }}</td>
+                                    <td dir="rtl">{{ module.hebrew_text }}</td>
+                                    <td>
+                                        {% if module.visible %}
+                                            <span class="badge bg-success">Visível</span>
+                                        {% else %}
+                                            <span class="badge bg-danger">Oculto</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{{ url_for('admin.edit_module', module_id=module.id) }}" class="btn btn-sm btn-primary">Editar</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="card-title mb-0">Configuração do Jogo do Alfabeto</h4>
+            </div>
+            <div class="card-body">
+                <p>
+                    Status do Jogo:
+                    {% with game_config = GameConfig.query.first() %}
+                        {% if game_config and game_config.visible %}
+                            <span class="badge bg-success">Visível</span>
+                        {% else %}
+                            <span class="badge bg-danger">Oculto</span>
+                        {% endif %}
+                    {% endwith %}
+                </p>
+                <form method="POST" action="{{ url_for('admin.toggle_game_visibility') }}">
+                    <button type="submit" class="btn btn-primary">
+                        {% with game_config = GameConfig.query.first() %}
+                            {{ 'Ocultar Jogo' if game_config and game_config.visible else 'Tornar Jogo Visível' }}
+                        {% endwith %}
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <a href="{{ url_for('admin.admin_dashboard') }}" class="btn btn-secondary">Voltar para o Painel</a>
+    </div>
+</div>
+{% endblock %}
